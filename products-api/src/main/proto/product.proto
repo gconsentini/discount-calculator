@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+option java_package = "com.gconsentini.productsapi";
+
+message Product {
+  string id = 1;
+  string user_id = 2;
+  int32 price_in_cents = 3;
+  string title = 4;
+  string description = 5;
+}
+
+message GetProductByIdRequest {
+  string id = 1;
+}
+
+message ProductRequest {
+  Product product = 1;
+}
+
+message ListProductsRequest {
+  
+}
+
+message ListProductsResponse {
+  repeated Product products = 1;
+}
+
+message ProductResponse {
+  Product product = 1;
+}
+
+service ProductService {
+  rpc getProductById(GetProductByIdRequest) returns (ProductResponse);
+  rpc listProducts(ListProductsRequest) returns (ListProductsResponse);
+  rpc Product(ProductRequest) returns (ProductResponse);
+}

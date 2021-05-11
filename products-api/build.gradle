@@ -1,0 +1,56 @@
+plugins {
+	id 'org.springframework.boot' version '2.4.5'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'com.google.protobuf' version '0.8.15'
+}
+
+group = 'com.gconsentini'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation group: 'net.devh', name: 'grpc-spring-boot-starter', version: '2.12.0.RELEASE'
+	implementation 'io.grpc:grpc-netty-shaded:1.37.0'
+	implementation 'io.grpc:grpc-protobuf:1.37.0'
+	implementation 'io.grpc:grpc-stub:1.37.0'
+	compileOnly 'org.apache.tomcat:annotations-api:6.0.53' // necessary for Java 9+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+	useJUnitPlatform()
+}
+
+protobuf {
+	protoc {
+		if (osdetector.os == "osx") {
+			artifact = "com.google.protobuf:protoc:3.14.0:osx-x86_64"
+		}
+		plugins {
+			grpc {
+				artifact = 'io.grpc:protoc-gen-grpc-java:1.37.0:osx-x86_64'
+			}
+		}
+		generateProtoTasks {
+			all()*.plugins {
+				grpc {}
+			}
+		}
+	}
+}
+
+// Inform IDEs like IntelliJ IDEA, Eclipse or NetBeans about the generated code.
+sourceSets {
+	main {
+		java {
+			srcDirs 'build/generated/source/proto/main/grpc'
+			srcDirs 'build/generated/source/proto/main/java'
+		}
+	}
+}
