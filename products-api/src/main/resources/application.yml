@@ -1,0 +1,12 @@
+grpc:
+  client:
+    product-server:
+      address: 'static://0.0.0.0:3335'
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      negotiationType: plaintext
+    user-server:
+      address: 'static://0.0.0.0:3334'
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      negotiationType: plaintext

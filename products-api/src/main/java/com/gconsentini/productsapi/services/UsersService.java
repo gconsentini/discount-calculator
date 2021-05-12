@@ -3,43 +3,53 @@ package com.gconsentini.productsapi.services;
 import com.gconsentini.productsapi.UserOuterClass;
 import com.gconsentini.productsapi.UserServiceGrpc;
 import com.gconsentini.productsapi.models.User;
-import io.grpc.ManagedChannelBuilder;
+import lombok.SneakyThrows;
+import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 @Service
 public class UsersService {
 
+    @GrpcClient("user-server")
+    private UserServiceGrpc.UserServiceBlockingStub userServiceBlockingStub;
 
-    private final UserServiceGrpc.UserServiceBlockingStub userServiceBlockingStub = UserServiceGrpc.newBlockingStub(ManagedChannelBuilder.forAddress("localhost", 3334).usePlaintext().build());
-
+    @SneakyThrows
     public User createUser(User userParams){
+        DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault());;
+        String isoStringDate = formatter.format(userParams.getDateOfBirth().toInstant());
         UserOuterClass.UserResponse response = userServiceBlockingStub.registerUser(
                 UserOuterClass.RegisterUserRequest.newBuilder().setUser(
                         UserOuterClass.User.newBuilder()
                                 .setFirstName(userParams.getFirstName())
                                 .setLastName(userParams.getLastName())
-                                .setDateOfBirth("12-21-1990")
+                                .setDateOfBirth(isoStringDate)
                                 .build()
                 ).build()
         );
-        User userResponse = new User();
-        userResponse.setId("" + response.getUser().getId());
-        userResponse.setFirstName(response.getUser().getFirstName());
-        userResponse.setLastName(response.getUser().getLastName());
-        try {
-            userResponse.setDateOfBirth(new SimpleDateFormat("dd/MM/yyyy").parse(response.getUser().getDateOfBirth()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return userResponse;
+        return getUserByUserResponse(response);
     }
 
     public User getUserById(String id){
-        return null;
+        UserOuterClass.UserResponse response = userServiceBlockingStub.getUserById(
+                UserOuterClass.GetUserByIdRequest.newBuilder().setId(id).build()
+        );
+
+        return getUserByUserResponse(response);
     }
 
+    private User getUserByUserResponse(UserOuterClass.UserResponse userResponse){
+        return User.builder()
+                .id(userResponse.getUser().getId())
+                .firstName(userResponse.getUser().getFirstName())
+                .lastName(userResponse.getUser().getLastName())
+                .dateOfBirth(Date.from(Instant.from(Instant.parse(userResponse.getUser().getDateOfBirth()).atZone(ZoneId.systemDefault()))))
+                .build();
+    }
 }

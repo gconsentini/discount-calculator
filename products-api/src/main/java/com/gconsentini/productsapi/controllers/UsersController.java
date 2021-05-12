@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.List;
 
 @RestController
 public class UsersController {
@@ -17,16 +15,10 @@ public class UsersController {
 
     @GetMapping("/users/{id}")
     public User getUserById(@PathVariable String id){
-
-        return new User();
+        return usersService.getUserById(id);
     }
 
-    @GetMapping("/users/")
-    public List<User> getAllUsers(){
-        return Collections.EMPTY_LIST;
-    }
-
-    @PostMapping(path = "/users/",
+    @PostMapping(path = "/users/create",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )

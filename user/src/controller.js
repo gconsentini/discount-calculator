@@ -4,6 +4,8 @@ module.exports = {
     async getUserById(call, callback) {
         const { id } = call.request;
 
+        console.log(call.request);
+
         const user = await User.findById(id);
 
         if (!user) {
@@ -11,7 +13,11 @@ module.exports = {
         }
 
         return callback(null, {
-            user: { user },
+          user: {
+            ...user.toObject(),
+            id: user._id,
+            date_of_birth: new Date(user.date_of_birth).toISOString(),
+          },
         });
     },
 
@@ -22,7 +28,11 @@ module.exports = {
         console.log(user._id);
 
         return callback(null, {
-            user,
+          user: {
+            ...user.toObject(),
+            id: user._id,
+            date_of_birth: new Date(user.date_of_birth).toISOString(),
+          },
         });
     },
 };

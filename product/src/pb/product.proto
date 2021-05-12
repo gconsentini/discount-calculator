@@ -16,7 +16,6 @@ message ProductRequest {
 }
 
 message ListProductsRequest {
-  string userId = 1;
 }
 
 message ListProductsResponse {

@@ -2,12 +2,12 @@ syntax = "proto3";
 
 option java_package = "com.gconsentini.productsapi";
 
+
 message Product {
   string id = 1;
-  string user_id = 2;
-  int32 price_in_cents = 3;
-  string title = 4;
-  string description = 5;
+  int32 price_in_cents = 2;
+  string title = 3;
+  string description = 4;
 }
 
 message GetProductByIdRequest {
@@ -19,7 +19,6 @@ message ProductRequest {
 }
 
 message ListProductsRequest {
-  
 }
 
 message ListProductsResponse {
