@@ -1,8 +1,12 @@
 const path = require('path');
 const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
+const dotenv = require("dotenv");
+dotenv.config();
 
 const controller = require('./controller');
+
+const port = process.env.PORT;
 
 require('./database');
 
@@ -21,7 +25,7 @@ const proto = grpc.loadPackageDefinition(packageDefinition);
 const server = new grpc.Server();
 
 server.addService(proto.UserService.service, controller);
-server.bind('0.0.0.0:3334', grpc.ServerCredentials.createInsecure());
+server.bind(`0.0.0.0:${port}`, grpc.ServerCredentials.createInsecure());
 server.start();
 
-console.log("Server running at 0.0.0.0:3334");
+console.log(`Server running at 0.0.0.0:${port}`);

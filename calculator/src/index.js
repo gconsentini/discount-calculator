@@ -6,6 +6,8 @@ dotenv.config();
 
 const controller = require('./controller');
 
+const port = process.env.PORT;
+
 const packageDefinition = protoLoader.loadSync(
     path.resolve(__dirname, 'pb', 'calculator.proto'),
     {
@@ -22,5 +24,7 @@ const proto = grpc.loadPackageDefinition(packageDefinition);
 const server = new grpc.Server();
 
 server.addService(proto.CalculatorService.service, controller);
-server.bind('0.0.0.0:3336', grpc.ServerCredentials.createInsecure());
+server.bind(`0.0.0.0:${port}`, grpc.ServerCredentials.createInsecure());
 server.start();
+
+console.log(`Server running at 0.0.0.0:${port}`);
