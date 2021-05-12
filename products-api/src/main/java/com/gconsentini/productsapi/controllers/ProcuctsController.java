@@ -1,14 +1,11 @@
 package com.gconsentini.productsapi.controllers;
 
 import com.gconsentini.productsapi.models.Product;
-import com.gconsentini.productsapi.models.User;
 import com.gconsentini.productsapi.services.ProductsService;
-import com.gconsentini.productsapi.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -19,7 +16,7 @@ public class ProcuctsController {
 
     @GetMapping("/products")
     public List<Product> getAllProducts(@RequestHeader("user-id") String userId){
-        return productsService.getAllProducts();
+        return productsService.getAllProducts(userId);
     }
 
     @GetMapping("/products/{id}")

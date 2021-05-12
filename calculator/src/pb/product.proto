@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-option java_package = "com.gconsentini.productsapi";
-
 message Product {
   string id = 1;
   int32 price_in_cents = 2;

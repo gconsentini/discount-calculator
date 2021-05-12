@@ -1,7 +1,10 @@
 package com.gconsentini.productsapi.services;
 
+import com.gconsentini.productsapi.Calculator;
+import com.gconsentini.productsapi.CalculatorServiceGrpc;
 import com.gconsentini.productsapi.ProductOuterClass;
 import com.gconsentini.productsapi.ProductServiceGrpc;
+import com.gconsentini.productsapi.models.Discount;
 import com.gconsentini.productsapi.models.Product;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
@@ -15,13 +18,18 @@ public class ProductsService {
     @GrpcClient("product-server")
     private ProductServiceGrpc.ProductServiceBlockingStub productServiceBlockingStub;
 
-    public List<Product> getAllProducts(){
+    @GrpcClient("calculator-server")
+    private CalculatorServiceGrpc.CalculatorServiceBlockingStub calculatorServiceBlockingStub;
+
+    public List<Product> getAllProducts(String userId){
         ProductOuterClass.ListProductsResponse response = productServiceBlockingStub.listProducts(
                 ProductOuterClass.ListProductsRequest.newBuilder().build()
         );
-        return response.getProductsList().stream()
-                .map(this::getProductByProductGrpc)
+        List<Product> responseList = response.getProductsList().stream()
+                .map(p -> getProductByProductGrpc(p, userId))
                 .collect(Collectors.toList());
+
+        return responseList;
     }
 
     public Product createProduct(Product productParams){
@@ -45,12 +53,23 @@ public class ProductsService {
         return getProductByProductResponse(response);
     }
 
-    private Product getProductByProductGrpc(ProductOuterClass.Product product){
+    private Product getProductByProductGrpc(ProductOuterClass.Product product, String userId){
+        Calculator.ProductDiscountResponse response = calculatorServiceBlockingStub.getProductDiscountByUserId(
+                Calculator.DiscountRequest.newBuilder()
+                        .setProductId(product.getId())
+                        .setUserId(userId)
+                        .build()
+        );
+
         return Product.builder()
-                .id(product.getId())
-                .title(product.getTitle())
-                .description(product.getDescription())
-                .priceInCents(product.getPriceInCents())
+                .id(response.getProduct().getId())
+                .title(response.getProduct().getTitle())
+                .description(response.getProduct().getDescription())
+                .priceInCents(response.getProduct().getPriceInCents())
+                .discount(Discount.builder()
+                        .percentage(response.getProduct().getDiscount().getPercentage())
+                        .valueInCents(response.getProduct().getDiscount().getValueInCents())
+                        .build())
                 .build();
     }
 

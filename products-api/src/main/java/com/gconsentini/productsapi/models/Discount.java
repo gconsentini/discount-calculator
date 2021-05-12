@@ -8,11 +8,11 @@ import lombok.Data;
 @Builder
 public class Discount {
 
-    private float percentage;
+    private double percentage;
     @JsonProperty("value_in_cents")
     private int valueInCents;
 
-    public Discount(float percentage, int valueInCents) {
+    public Discount(double percentage, int valueInCents) {
         this.percentage = percentage;
         this.valueInCents = valueInCents;
     }
