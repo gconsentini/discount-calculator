@@ -3,27 +3,32 @@ package com.gconsentini.productsapi.controllers;
 import com.gconsentini.productsapi.models.User;
 import com.gconsentini.productsapi.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 
 @RestController
+@Validated
 public class UsersController {
 
     @Autowired
     private UsersService usersService;
 
     @GetMapping("/users/{id}")
-    public User getUserById(@PathVariable String id){
-        return usersService.getUserById(id);
+    public ResponseEntity<User> getUserById(@RequestParam @PathVariable String id){
+        return ResponseEntity.ok(usersService.getUserById(id));
     }
 
     @PostMapping(path = "/users/create",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public User createUser(@RequestBody User user){
-        return usersService.createUser(user);
+    public ResponseEntity<User> createUser(@Valid @RequestBody User user){
+        return new ResponseEntity<User>(usersService.createUser(user), HttpStatus.OK);
     }
 
 
