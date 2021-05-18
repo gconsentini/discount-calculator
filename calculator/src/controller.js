@@ -2,6 +2,10 @@ const productClient = require('./services/product');
 const userClient = require("./services/user");
 
 Date.prototype.isSameDateAs = function (pDate) {
+
+  console.log(this.getDate());
+  console.log(pDate.getDate());
+
   return (
     this.getMonth() === pDate.getMonth() &&
     this.getDate() === pDate.getDate()
@@ -45,7 +49,7 @@ function getDiscountByUser(user, product){
   const today = new Date();
   let percentage = 1;
 
-  console.log(today.isSameDateAs(new Date(user.date_of_birth)));
+  console.log(today);
 
   if (today.isSameDateAs(blackFriday))
     percentage -= blackFridayDiscount;
@@ -53,12 +57,9 @@ function getDiscountByUser(user, product){
     percentage -= birthdayDiscount;
   
   return {
-    product: {
-      ...product,
-      discount: {
-        percentage: Number(percentage).toFixed(2),
-        value_in_cents: calculateDiscount(percentage, product.price_in_cents),
-      },
+    discount: {
+      percentage: Number(1-percentage).toFixed(2),
+      value_in_cents: calculateDiscount(percentage, product.price_in_cents),
     },
   };
 }

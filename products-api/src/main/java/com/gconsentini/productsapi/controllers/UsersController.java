@@ -19,8 +19,8 @@ public class UsersController {
     private UsersService usersService;
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUserById(@RequestParam @PathVariable String id){
-        return ResponseEntity.ok(usersService.getUserById(id));
+    public ResponseEntity<User> getUserById(@PathVariable String id){
+        return new ResponseEntity<>(usersService.getUserById(id), HttpStatus.OK);
     }
 
     @PostMapping(path = "/users/create",
@@ -28,7 +28,7 @@ public class UsersController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<User> createUser(@Valid @RequestBody User user){
-        return new ResponseEntity<User>(usersService.createUser(user), HttpStatus.OK);
+        return new ResponseEntity<>(usersService.createUser(user), HttpStatus.OK);
     }
 
 

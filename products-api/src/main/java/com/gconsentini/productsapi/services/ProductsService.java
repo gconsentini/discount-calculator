@@ -7,6 +7,7 @@ import com.gconsentini.productsapi.ProductServiceGrpc;
 import com.gconsentini.productsapi.models.Discount;
 import com.gconsentini.productsapi.models.Product;
 import net.devh.boot.grpc.client.inject.GrpcClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,21 +55,32 @@ public class ProductsService {
     }
 
     private Product getProductByProductGrpc(ProductOuterClass.Product product, String userId){
-        Calculator.ProductDiscountResponse response = calculatorServiceBlockingStub.getProductDiscountByUserId(
-                Calculator.DiscountRequest.newBuilder()
-                        .setProductId(product.getId())
-                        .setUserId(userId)
-                        .build()
-        );
+        Calculator.ProductDiscountResponse response;
+        try {
+            response = calculatorServiceBlockingStub.getProductDiscountByUserId(
+                    Calculator.DiscountRequest.newBuilder()
+                            .setProductId(product.getId())
+                            .setUserId(userId)
+                            .build()
+            );
+        } catch (Exception e){
+            System.out.println("Error accessing the calculator api");
+            return Product.builder()
+                    .id(product.getId())
+                    .title(product.getTitle())
+                    .description(product.getDescription())
+                    .priceInCents(product.getPriceInCents())
+                    .build();
+        }
 
         return Product.builder()
-                .id(response.getProduct().getId())
-                .title(response.getProduct().getTitle())
-                .description(response.getProduct().getDescription())
-                .priceInCents(response.getProduct().getPriceInCents())
+                .id(product.getId())
+                .title(product.getTitle())
+                .description(product.getDescription())
+                .priceInCents(product.getPriceInCents())
                 .discount(Discount.builder()
-                        .percentage(response.getProduct().getDiscount().getPercentage())
-                        .valueInCents(response.getProduct().getDiscount().getValueInCents())
+                        .percentage(response.getDiscount().getPercentage())
+                        .valueInCents(response.getDiscount().getValueInCents())
                         .build())
                 .build();
     }

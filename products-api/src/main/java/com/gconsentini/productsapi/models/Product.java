@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
@@ -12,11 +13,11 @@ public class Product {
 
     private String id;
     @JsonProperty("price_in_cents")
-    @NotBlank(message = "preço não pode ser vazio")
+    @NotNull(message = "Preço não pode ser vazio")
     private int priceInCents;
-    @NotBlank(message = "titulo não pode ser vazio")
+    @NotEmpty(message = "Titulo não pode ser vazio")
     private String title;
-    @NotBlank(message = "descrição não pode ser vazia")
+    @NotEmpty(message = "Descricao não pode ser vazio")
     private String description;
     private Discount discount;
 

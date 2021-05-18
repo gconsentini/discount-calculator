@@ -1,0 +1,65 @@
+version: '3'
+services:
+
+    mongo-db:
+        image: mongo
+        container_name: mongo-db
+        ports:
+            - "27017:27017"
+
+    product:
+        build: ./product
+        container_name: product
+        environment: 
+            - PORT=3335
+            - MONGO_HOST=mongo-db
+        ports:
+            - "3335:3335"
+        links:
+            - mongo-db
+        depends_on:
+            - mongo-db
+
+
+    user:
+        build: ./user
+        container_name: user
+        environment: 
+            - PORT=3334
+            - MONGO_HOST=mongo-db
+        ports:
+            - "3334:3334"
+        links:
+            - mongo-db
+        depends_on: 
+            - mongo-db
+
+    calculator:
+        build: ./calculator
+        container_name: calculator
+        environment: 
+            - PORT=3336
+            - BLACK_FRIDAY_DATE=11-25-2021
+            - BLACK_FRIDAY_DISCOUNT=0.1
+            - BIRTHDAY_DISCOUNT=0.05
+            - PRODUCT_HOST=product
+            - USER_HOST=user
+        ports:
+            - "3336:3336"
+        links:
+            - product
+            - user
+
+    products-api:
+        build: ./products-api
+        container_name: products-api
+        ports:
+            - 8080:8080
+        links:
+            - product
+            - user
+            - calculator
+        depends_on: 
+            - product
+            - user
+            - calculator

@@ -22,7 +22,7 @@ public class User {
     @NotBlank(message = "Sobrenome não pode ser vazio")
     private String lastName;
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd/MM/yyyy")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd/MM/yyyy", timezone="PST")
     @JsonProperty("date_of_birth")
     private Date dateOfBirth;
 

@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost:27017/product', {
+const mongoHost = process.env.MONGO_HOST;
+
+mongoose.connect(`mongodb://${mongoHost}:27017/product`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
