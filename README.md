@@ -3,7 +3,7 @@ A simple discount calculator with 4 microservices that talk to each other with g
 
 # Before all
 
-    This was created and tested on a macbook with an m1 chip(ARM architecture), the packages for gRPC on node and java were not yet available for it, so it may contain some issues.
+```This was created and tested on a macbook with an m1 chip(ARM architecture), the packages for gRPC on node and java were not yet available for it, so it may contain some issues.```
 
 ## Stack
 * nodejs
@@ -74,6 +74,6 @@ it should create 5 containers, 4 for the services and 1 for the database.
 
 ## Other things
 
-    if you want to test if the calculator service is not running, or an error occurs calculating the discount, just run the command on docker to shut down the service, or does not run the calculator service locally.
+```if you want to test if the calculator service is not running, or an error occurs calculating the discount, just run the command on docker to shut down the service, or does not run the calculator service locally.```
 
 `docker compose down calculator`
