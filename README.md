@@ -1,5 +1,9 @@
 # Discount-Calculator
-A simple discount calculator with 4 microservices what talk to each other with gRPC protocol.
+A simple discount calculator with 4 microservices that talk to each other with gRPC protocol.
+
+# Before all
+
+    This was created and tested on a macbook with an m1 chip(ARM architecture), the packages for gRPC on node and java were not yet available for it, so it may contain some issues.
 
 ## Stack
 * nodejs
