@@ -21,7 +21,7 @@ There's a swagger documentation for the project on:
 
 http://localhost:8080/swagger-ui.html
 
-## How to deploy the application
+## How to deploy the application locally
 
 The rest application runs on http://localhost:8080
 
@@ -66,7 +66,7 @@ it should create 5 containers, 4 for the services and 1 for the database.
 
     `./gradlew bootRun`
 
-    
+
 
 ## Other things
 
