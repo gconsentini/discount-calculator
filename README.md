@@ -5,6 +5,8 @@ A simple discount calculator with 4 microservices that talk to each other with g
 
 ```This was created and tested on a macbook with an m1 chip(ARM architecture), the packages for gRPC on node and java were not yet available for it, so it may contain some issues.```
 
+    There's a collection either for Insomnia
+
 ## Stack
 * nodejs
 * grpc
